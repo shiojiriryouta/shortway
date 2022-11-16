@@ -15,7 +15,7 @@ plt.quiver(0,0,vx_ship,vy_ship,color = 'blue',angles='xy',scale_units='xy',scale
 
 #風のベクトルを出す
 
-v_wind = 10
+v_wind = 20
 theta_wind = 3*pi/2
 vx_wind = v_wind * math.cos(theta_wind)
 vy_wind = v_wind * math.sin(theta_wind)
@@ -37,7 +37,7 @@ vy_ship = v_ship * math.sin(theta_ship)
 
 
 # グラフ表示
-plt.xlim([-10,40]) #図のxの範囲
-plt.ylim([-10,40]) #図のyの範囲
+plt.xlim([-10,100]) #図のxの範囲
+plt.ylim([-10,100]) #図のyの範囲
 plt.grid() #図の中に縦と横の線を引く
 plt.show() #図を表示

@@ -20,6 +20,7 @@ dis = geodesic(TokyoStation, NagoyaStation).km
 
 print(dis)
 
+# 角度表示
 pi = math.pi
 kakudo = shita*360/(2*pi)
 print(kakudo)
