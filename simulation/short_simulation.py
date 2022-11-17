@@ -7,16 +7,22 @@ coodinate = []
 itigyou = []
 lat = 34.200
 lng = 133.600
-for i in range(10):
-    for j in range(20):
+
+sep_lat = 11
+sep_lng = 21
+
+for i in range(sep_lat):
+    for j in range(sep_lng):
         tmp = [round(lat,2),round(lng,2),-5,4]
         itigyou.append(tmp)
         lng +=  0.04000
     lat += 0.04000
+    lng = 133.600
     coodinate.append(itigyou)
     itigyou = []
 
-print(coodinate[0][5])
+print(coodinate[0][0])
+print(coodinate[10][20])
 
 
 # πの値を角度(°)に変換
@@ -57,3 +63,23 @@ def vector_plot(v_ship,theta_ship,v_wind,theta_wind):
     plt.ylim([-10,100]) #図のyの範囲
     plt.grid() #図の中に縦と横の線を引く
     plt.show() #図を表示
+
+# 入力の値を
+in_lat = 34.44554
+in_lng = 133.94749
+for  i in range(10):
+    if in_lat < 34.2 or in_lat > 34.6 or in_lng < 133.6 or in_lng > 134.4 :
+        print("入力座標が範囲外です")
+        break
+    if 34.2 + i * (0.4/(sep_lat-1)) >= in_lat :
+        ans_lat = i
+        break
+
+for i in range(20):
+    if in_lat < 34.2 or in_lat > 34.6 or in_lng < 133.6 or in_lng > 134.4 :
+        print("入力座標が範囲外です")
+        break
+    if 133.6 + i * (0.8/(sep_lng-1)) >= in_lng :
+        ans_lng = i
+        break
+print(coodinate[ans_lat][ans_lng])
