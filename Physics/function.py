@@ -113,5 +113,44 @@ def vincenty_inverse(lat1, lon1, lat2, lon2, ellipsoid=None):
     }
 
 
+####　船と風のベクトルを描画する
+def vector_plot(v_ship,theta_ship,v_wind,theta_wind):
+
+    plt.figure()
+    #船のベクトルを出す
+    
+    vx_ship = v_ship * cos(theta_ship)
+    vy_ship = v_ship * sin(theta_ship)
+    plt.quiver(0,0,vx_ship,vy_ship,color = 'blue',angles='xy',scale_units='xy',scale=1)
+    # 上の0,0を最初の座標に変換する
+
+    #風のベクトルを出す
+
+    
+    vx_wind = v_wind * cos(theta_wind)
+    vy_wind = v_wind * sin(theta_wind)
+    wind_vector_x = vx_ship + vx_wind
+    wind_vector_y = vy_ship + vy_wind
+    plt.quiver(vx_ship,vy_ship,vx_wind,vy_wind,color = 'green',angles='xy',scale_units='xy',scale=1)
+
+    #合成ベクトルを出す
+
+    plt.quiver(0,0,wind_vector_x,wind_vector_y,color = 'red',angles='xy',scale_units='xy',scale=1)
+    # 上の0,0を最初の座標にする
+    plt.xlim([-10,100]) #図のxの範囲
+    plt.ylim([-10,100]) #図のyの範囲
+    plt.grid() #図の中に縦と横の線を引く
+    plt.show() #図を表示
+
+
+#### πの値を角度(°)に変換
+def theta_kakudo(theta):
+    return theta*360/(2*pi)
+
+#### 角度をπの表示に変換
+def kakudo_theta(kakudo):
+    return kakudo*2*pi/360
+    
+
 #### シミュレーション配列に入っているか判定する関数
 

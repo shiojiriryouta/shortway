@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from function import *
 
 # 地図配列ダミーデータ20✕10
 coodinate = []
@@ -36,35 +37,7 @@ start_lat = 34.2
 start_lng = 133.6
 
 
-def vector_plot(v_ship,theta_ship,v_wind,theta_wind):
-
-    plt.figure()
-    #船のベクトルを出す
-    
-    vx_ship = v_ship * math.cos(theta_ship)
-    vy_ship = v_ship * math.sin(theta_ship)
-    plt.quiver(0,0,vx_ship,vy_ship,color = 'blue',angles='xy',scale_units='xy',scale=1)
-    # 上の0,0を最初の座標に変換する
-
-    #風のベクトルを出す
-
-    
-    vx_wind = v_wind * math.cos(theta_wind)
-    vy_wind = v_wind * math.sin(theta_wind)
-    wind_vector_x = vx_ship + vx_wind
-    wind_vector_y = vy_ship + vy_wind
-    plt.quiver(vx_ship,vy_ship,vx_wind,vy_wind,color = 'green',angles='xy',scale_units='xy',scale=1)
-
-    #合成ベクトルを出す
-
-    plt.quiver(0,0,wind_vector_x,wind_vector_y,color = 'red',angles='xy',scale_units='xy',scale=1)
-    # 上の0,0を最初の座標にする
-    plt.xlim([-10,100]) #図のxの範囲
-    plt.ylim([-10,100]) #図のyの範囲
-    plt.grid() #図の中に縦と横の線を引く
-    plt.show() #図を表示
-
-# 入力の値を
+# 入力の値と近いマッピングの座標を出力する
 in_lat = 34.44554
 in_lng = 133.94749
 for  i in range(10):
@@ -82,4 +55,13 @@ for i in range(20):
     if 133.6 + i * (0.8/(sep_lng-1)) >= in_lng :
         ans_lng = i
         break
-print(coodinate[ans_lat][ans_lng])
+
+## 妨害要素を考慮して進行方向を出力
+
+#目的地の座標
+des_lat = 34.5
+des_lng = 134.2
+
+go_kakudo = vincenty_inverse(ans_lat, ans_lng, des_lat, des_lng, 1)['azimuth1']
+go_theta = kakudo_theta(go_kakudo)
+
