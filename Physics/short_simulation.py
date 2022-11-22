@@ -1,14 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
+from math import *
 from function import *
 
-# 地図配列ダミーデータ20✕10
+## 地図配列ダミーデータ20✕10を作成
 coodinate = []
 itigyou = []
-lat = 34.200
+# 左下の座標
+lat = 34.200 
 lng = 133.600
-
+# 何個範囲内の座標をどのくらい分割するか (sep-1 が分割する数)
 sep_lat = 11
 sep_lng = 21
 
@@ -22,22 +23,8 @@ for i in range(sep_lat):
     coodinate.append(itigyou)
     itigyou = []
 
-print(coodinate[0][0])
-print(coodinate[10][20])
 
-
-# πの値を角度(°)に変換
-def theta_kakudo(theta):
-    pi = math.pi
-    return theta*360/(2*pi)
-
-
-# スタート地点の座標の定義
-start_lat = 34.2
-start_lng = 133.6
-
-
-# 入力の値と近いマッピングの座標を出力する
+# 出発地の座標と近いマッピングの座標を出力する
 in_lat = 34.44554
 in_lng = 133.94749
 for  i in range(10):
@@ -65,3 +52,8 @@ des_lng = 134.2
 go_kakudo = vincenty_inverse(ans_lat, ans_lng, des_lat, des_lng, 1)['azimuth1']
 go_theta = kakudo_theta(go_kakudo)
 
+v_ship = 35
+cood_tmp = coodinate[ans_lat][ans_lng]
+v_wind = ( cood_tmp[2] ** 2 + cood_tmp[3] ** 2 ) ** (1/2)
+theta_wind = atan(cood_tmp[3]/cood_tmp[2]) + pi
+vector_plot(v_ship,go_theta,v_wind,theta_wind)

@@ -137,8 +137,8 @@ def vector_plot(v_ship,theta_ship,v_wind,theta_wind):
 
     plt.quiver(0,0,wind_vector_x,wind_vector_y,color = 'red',angles='xy',scale_units='xy',scale=1)
     # 上の0,0を最初の座標にする
-    plt.xlim([-10,100]) #図のxの範囲
-    plt.ylim([-10,100]) #図のyの範囲
+    plt.xlim([-10,40]) #図のxの範囲
+    plt.ylim([-10,40]) #図のyの範囲
     plt.grid() #図の中に縦と横の線を引く
     plt.show() #図を表示
 
