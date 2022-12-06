@@ -1,6 +1,2 @@
-fd = [20,20]
-
-# 進む式　x はひとまず0にしている
-
-a = fd[1]/fd[0]
-print(a)
+for  i in range(2,12):
+    print(i,end="")

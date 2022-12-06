@@ -1,0 +1,2 @@
+from naname import *
+

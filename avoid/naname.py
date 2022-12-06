@@ -11,7 +11,6 @@ def hosen(a,b,c):
 def riku_range(a,b,field):
     s = [-1,-1]
     e = [-1,-1]
-    result = []
     for  i in range(21):
         y = a * i + b
         y = int(round(y))
@@ -20,20 +19,84 @@ def riku_range(a,b,field):
         
         if field[y][i] == 1:
             s = [i,y]
-            result.append(s)
             break
+    print(s)
     if s != [-1,-1]:
         for i in range(s[0],21):
             y = a * i + b
             y = round(y)
+            print(y)
             if y < 0 or y > 20:
                 continue
             
             if field[y][i] == 0:
                 e = [i-1,round(a * (i-1) + b)]
-                result.append(e)
                 break
     return s,e
+
+# 出発地と目的地その他もろもろを入れるとどこに向かうべきか出力してくれる関数を定義する
+
+def turn_point(sd: list,fd: list,field: list):
+    
+    # 進む式の係数を求めている y = ax + b　
+    a = (fd[1] - sd[1])/(fd[0] - sd[0])
+    b = sd[1] - a * sd[0]
+    
+    # 陸の中で最も直線から距離が離れている座標と長さを知りたい
+    dr_max = dl_max = -1
+    lx = ly = rx = ry = None
+    for i in range(sd[0],fd[0]+1):
+        
+        # 法線を出して陸の範囲を出す
+        ho = hosen(a,b,i)
+        atmp = ho[0]
+        btmp = ho[1]
+        uz =  riku_range(atmp,btmp,field)
+        if uz[0][0]  == -1:
+            continue
+
+        # 今見ている座標から２つの陸の終点の座標の距離をだす
+        # i 今見てるx
+        # a*i + b 今見てるy
+        # uz[0]左側の座標
+        # uz[1]右側の座標
+
+        dxl = uz[0][0] - i
+        dyl = uz[0][1] - (a*i + b)
+        dl = (dxl**2 + dyl**2)**(1/2)
+        dxr = uz[1][0] - i
+        dyr = uz[1][1] - (a*i + b)
+        dr = (dxr**2 + dyr**2)**(1/2)
+
+        # 左右の距離の最大を求める
+        if dr_max < dr :
+            dr_max = dr
+            rx = uz[1][0]
+            ry = uz[1][1]
+        if dl_max < dl:
+            dl_max = dl
+            lx = uz[0][0]
+            ly = uz[0][1]  
+
+    # 2つのMAXで小さい方の座標を取得する
+
+    # if dr_max > dl_max:
+    #     tx = lx
+    #     ty = ly
+    # else:
+    #     tx = rx
+    #     ty = ry
+
+    result = []
+
+    if lx == None and ry == None:
+        result.append(fd)
+        result.append(fd)
+        
+    else:
+        result.append([lx,ly])
+        result.append([rx,ry])
+    return result
 
 #フィールドの定義 陸の範囲 x→j,y→i:5～10
 field = []
@@ -47,75 +110,19 @@ for i in range(21):
     field.append(tmp)
     tmp = []
 
-
-# 目的地の座標
+# 出発地，目的地の座標
+sd = [0,0]
 fd = [20,20]
+# test = turn_point(sd,fd,field)
 
-# 進む式　x はひとまず0にしている
+# # 目的地が出力されるまで求め続ける
 
-a = round(fd[1]/fd[0],6)
-b = 0
-x = 0
-y = a * x + b
+sd = [4,16]
+# test = turn_point(sd,fd,field)
+# print(test)
 
+a = (fd[1] - sd[1])/(fd[0] - sd[0])
+b = sd[1] - a * sd[0]
 
-result = hosen(a,b,8)
-atmp = result[0]
-btmp = result[1]
-uz =  riku_range(atmp,btmp,field)
-print(uz)
-dxl = uz[0][0] - 8
-dyl = uz[0][1] - (a*8 + b)
-dl = (dxl**2 + dyl**2)**(1/2)
-dxr = uz[1][0] - 8
-dyr = uz[1][1] - (a*8 + b)
-dr = (dxr**2 + dyr**2)**(1/2)
-print(dr,dl)
-
-
-# 陸の中で最も直線から距離が離れている座標と長さを知りたい
-i = 0
-dr_max = -1
-dl_max = -1
-for i in range(21):
-    result = hosen(a,b,i)
-    atmp = result[0]
-    btmp = result[1]
-    uz =  riku_range(atmp,btmp,field)
-    if uz[0][0]  == -1:
-        continue
-    # 今見ている座標から２つの陸の終点の座標の距離をだす
-    # i 今見てるx
-    # a*i + b 今見てるy
-    # uz[0]左側の座標
-    # uz[1]右側の座標
-
-    yh = atmp*i + btmp
-    dxl = uz[0][0] - i
-    dyl = uz[0][1] - (a*i + b)
-    dl = (dxl**2 + dyl**2)**(1/2)
-    dxr = uz[1][0] - i
-    dyr = uz[1][1] - (a*i + b)
-    dr = (dxr**2 + dyr**2)**(1/2)
-
-    if dr_max < dr :
-        dr_max = dr
-        rx = uz[0][0]
-        ry = uz[0][1]
-    if dl_max < dl:
-        dl_max = dl
-        lx = uz[1][0]
-        ly = uz[1][1]  
-    i += 1
-    y = a * i + b
-print(rx,ry,dr_max)
-print(lx,ly,dl_max)
-
-if dr_max > dl_max:
-    tx = rx
-    ty = ry
-else:
-    tx = lx
-    ty = ly
-
-print(tx,ty)
+c = riku_range(a,b,field)
+print(c)
