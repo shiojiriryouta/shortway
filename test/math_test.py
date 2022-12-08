@@ -1,2 +1,5 @@
-for  i in range(2,12):
-    print(i,end="")
+from math import *
+import numpy as np
+
+a = 1.999999999999999
+print(round(a,5))
