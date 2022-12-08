@@ -148,7 +148,6 @@ def turn_point(sd: list,fd: list,field: list):
     if lx == None and ry == None:
         result.append(fd)
         result.append(fd)
-        
     else:
         result.append([lx,ly])
         result.append([rx,ry])
