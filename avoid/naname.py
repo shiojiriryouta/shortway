@@ -19,10 +19,10 @@ def hosen(a,b,c):
 def riku_range(a,b,field):
     s = [-1,-1]
     e = [-1,-1]
-    for  i in range(21):
+    for  i in range(201):
         y = a * i + b
-        y = round(y,4)
-        if y < 0 or y > 20:
+        y = round(y,7)
+        if y < 0 or y > 200:
             continue
         # 傾きが正なら切り捨てて負なら切り上げる(eでは逆)
         if np.sign(a) == 1:
@@ -34,10 +34,10 @@ def riku_range(a,b,field):
             break
     
     if s != [-1,-1]:
-        for i in range(s[0],21):
+        for i in range(s[0],201):
             y = a * i + b
-            y = round(y,4)
-            if y < 0 or y > 20:
+            y = round(y,7)
+            if y < 0 or y > 200:
                 continue
             if np.sign(a) == 1:
                 y = ceil(y)
@@ -48,7 +48,7 @@ def riku_range(a,b,field):
                 break
     return s,e
 
-# riku_rangeの範囲指定版関数
+# riku_rangeを法線で使うときの範囲指定版関数
 def hos_range(a,b,x,field,s,e):
 
     if x >= s and e >= x:
@@ -57,7 +57,7 @@ def hos_range(a,b,x,field,s,e):
             y = a * i + b
             y = round(y,4)
             
-            if y < 0 or y > 20:
+            if y < 0 or y > 200:
                 break
             if np.sign(a) == 1:
                 y = floor(y)
@@ -72,7 +72,7 @@ def hos_range(a,b,x,field,s,e):
             y = a * i + b
             y = round(y,4)
             
-            if y < 0 or y > 20:
+            if y < 0 or y > 200:
                 break
             if np.sign(a) == 1:
                 y = floor(y)
@@ -92,7 +92,7 @@ def hos_range(a,b,x,field,s,e):
 
 def turn_point(sd: list,fd: list,field: list):
     
-    # 進む式の係数を求めている y = ax + b　
+    # 進む式の係数を求めている y = ax + b
     a = (fd[1] - sd[1])/(fd[0] - sd[0])
     b = sd[1] - a * sd[0]
     
@@ -156,31 +156,30 @@ def turn_point(sd: list,fd: list,field: list):
 #フィールドの定義 陸の範囲 x→j,y→i:5～10
 field = []
 tmp = []
-for i in range(21):
-    for j in range(21):
-        if j >= 4 and j <= 14 and i >= 2 and i <= 16:
+for i in range(201):
+    for j in range(201):
+        if j >= 40 and j <= 140 and i >= 20 and i <= 160:
             tmp.append(1)
         else:
             tmp.append(0)
     field.append(tmp)
     tmp = []
 
-for i in range(2,6):
-    for j in range(9,13):
+for i in range(20,60):
+    for j in range(81,141):
         field[i][j] = 0
 
 # 出発地，目的地の座標
-sd = [8,2]
-fd = [20,20]
+sd = [0,0]
+fd = [140,60]
 
 ab = kase(sd,fd)
 tyoku = riku_range(ab[0],ab[1],field)
-if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1]:
-    print(tyoku)
+test = turn_point(sd,fd,field)
+if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1] or test[0] == test[1]:
+    
     print(f"{sd} → {fd}")
-
 else:
-    test = turn_point(sd,fd,field)
     print(test)
 
 # # # 目的地が出力されるまで求め続ける

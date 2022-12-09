@@ -1,5 +1,6 @@
 from math import *
 import numpy as np
-
-a = 1.4
-print(round(a))
+s = []
+a = "こんにちは"
+s.append(a)
+print(s[0][2])
