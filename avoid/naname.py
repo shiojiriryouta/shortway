@@ -99,7 +99,7 @@ def turn_point(sd: list,fd: list,field: list):
     # 陸の中で最も直線から距離が離れている座標と長さを知りたい
     dr_max = dl_max = -1
     lx = ly = rx = ry = None
-    for i in range(sd[0],fd[0]+1):
+    for i in range(sd[0]+1,fd[0]+1):
         
         # 法線を出して陸の範囲を出す
         ho = hosen(a,b,i)
@@ -171,16 +171,43 @@ for i in range(20,60):
 
 # 出発地，目的地の座標
 sd = [0,0]
-fd = [140,60]
+fd = [200,200]
 
 ab = kase(sd,fd)
 tyoku = riku_range(ab[0],ab[1],field)
 test = turn_point(sd,fd,field)
-if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1] or test[0] == test[1]:
-    
-    print(f"{sd} → {fd}")
-else:
-    print(test)
+# if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1] or test[0] == test[1]:
+#     # print(f"{sd} → {fd}")
+#     print(test)
+# else:
+#     print(test)
+
+route = []
+# for i in range(10):
+#     tsd = sd
+#     tfd = fd
+#     tmp = turn_point(tsd,tfd,field)
+
+#     # 最終目的地に着けた場合はOKと出力
+#     if tmp[0] == fd or tmp[1] == fd:
+#         print("OK")
+#         break
+#     # 途中の目的地につけた場合は出発地を途中の目的地に設定する
+#     elif tmp[0] == tfd:
+#         tsd = tmp[0]
+#     else:
+tsd = sd
+tfd = fd
+for i in range(10):
+    tmp = turn_point(tsd,tfd,field)
+    route.append(tsd)
+    if tmp[0] == fd or tmp[1] == fd:
+        route.append(tfd)
+        print(route)
+        break
+    else:
+        tsd = tmp[0]
+
 
 # # # 目的地が出力されるまで求め続ける
 
