@@ -57,3 +57,7 @@ cood_tmp = coodinate[ans_lat][ans_lng]
 v_wind = ( cood_tmp[2] ** 2 + cood_tmp[3] ** 2 ) ** (1/2)
 theta_wind = atan(cood_tmp[3]/cood_tmp[2]) + pi
 vector_plot(v_ship,go_theta,v_wind,theta_wind)
+
+ds = vincenty_inverse(34.133543,133.532333,34.563754,134.099271,1)
+
+print(ds)
