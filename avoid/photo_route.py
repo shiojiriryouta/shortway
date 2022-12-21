@@ -16,28 +16,28 @@ def hosen(a,b,c):
     return ah,bh
 
 # 船の目的地への直線と被っている陸の範囲を表示する関数(ただ後ろにも反応してしまう)
-def riku_range(a,b,field):
+def riku_range(a,b,field,sd,fd):
     s = [-1,-1]
     e = [-1,-1]
-    for  i in range(201):
+    for  i in range(sd[0],fd[0]):
         y = a * i + b
         y = round(y,7)
-        if y < 0 or y > 200:
+        if y < 0 or y > field.shape[0]:
             continue
         # 傾きが正なら切り捨てて負なら切り上げる(eでは逆)
         if np.sign(a) == 1:
             y = floor(y)
         else:
             y = ceil(y)
-        if field[y][i] == 1 and [i,y] != sd:
+        if field[y][i] > 230 :
             s = [i,y]
             break
     
     if s != [-1,-1]:
-        for i in range(s[0],201):
+        for i in range(s[0],fd[0]):
             y = a * i + b
             y = round(y,7)
-            if y < 0 or y > 200:
+            if y < 0 or y > field.shape[0]:
                 continue
             if np.sign(a) == 1:
                 y = ceil(y)
@@ -57,13 +57,13 @@ def hos_range(a,b,x,field,s,e):
             y = a * i + b
             y = round(y,4)
             
-            if y < 0 or y > 200:
+            if y < 0 or y > field.shape[0]:
                 break
             if np.sign(a) == 1:
                 y = floor(y)
             else:
                 y = ceil(y)
-            if field[y][i] == 1:
+            if field[y][i] == 255:
                 ans = [i,y]
             else:
                 break
@@ -72,13 +72,13 @@ def hos_range(a,b,x,field,s,e):
             y = a * i + b
             y = round(y,4)
             
-            if y < 0 or y > 200:
+            if y < 0 or y > field.shape[0]:
                 break
             if np.sign(a) == 1:
                 y = floor(y)
             else:
                 y = ceil(y)
-            if field[y][i] == 1:
+            if field[y][i] == 255:
                 ans = [i,y]
             else:
                 break
@@ -153,104 +153,104 @@ def turn_point(sd: list,fd: list,field: list):
         result.append([rx,ry])
     return result
 
-#フィールドの定義 陸の範囲 x→j,y→i:5～10
-field = []
-tmp = []
-for i in range(201):
-    for j in range(201):
-        if j >= 40 and j <= 140 and i >= 20 and i <= 160:
-            tmp.append(1)
-        else:
-            tmp.append(0)
-    field.append(tmp)
-    tmp = []
+# #フィールドの定義 陸の範囲 x→j,y→i:5～10
+# field = []
+# tmp = []
+# for i in range(201):
+#     for j in range(201):
+#         if j >= 40 and j <= 140 and i >= 20 and i <= 160:
+#             tmp.append(1)
+#         else:
+#             tmp.append(0)
+#     field.append(tmp)
+#     tmp = []
 
-for i in range(20,60):
-    for j in range(81,141):
-        field[i][j] = 0
+# for i in range(20,60):
+#     for j in range(81,141):
+#         field[i][j] = 0
 
-# 出発地，目的地の座標
-sd = [0,0]
-fd = [200,200]
+# # 出発地，目的地の座標
+# sd = [0,0]
+# fd = [200,200]
 
-ab = kase(sd,fd)
-tyoku = riku_range(ab[0],ab[1],field)
-test = turn_point(sd,fd,field)
-# if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1] or test[0] == test[1]:
-#     # print(f"{sd} → {fd}")
-#     print(test)
-# else:
-#     print(test)
+# ab = kase(sd,fd)
+# tyoku = riku_range(ab[0],ab[1],field)
+# test = turn_point(sd,fd,field)
+# # if tyoku == ([-1,-1],[-1,-1]) or tyoku[0] == tyoku[1] or test[0] == test[1]:
+# #     # print(f"{sd} → {fd}")
+# #     print(test)
+# # else:
+# #     print(test)
 
-routel = []
-router = []
+# routel = []
+# router = []
+# # for i in range(10):
+# #     tsd = sd
+# #     tfd = fd
+# #     tmp = turn_point(tsd,tfd,field)
+
+# #     # 最終目的地に着けた場合はOKと出力
+# #     if tmp[0] == fd or tmp[1] == fd:
+# #         print("OK")
+# #         break
+# #     # 途中の目的地につけた場合は出発地を途中の目的地に設定する
+# #     elif tmp[0] == tfd:
+# #         tsd = tmp[0]
+# #     else:
+# tsd = sd
+# tfd = fd
 # for i in range(10):
-#     tsd = sd
-#     tfd = fd
 #     tmp = turn_point(tsd,tfd,field)
-
-#     # 最終目的地に着けた場合はOKと出力
+#     routel.append(tsd)
 #     if tmp[0] == fd or tmp[1] == fd:
-#         print("OK")
+#         routel.append(tfd)
+#         print(routel)
 #         break
-#     # 途中の目的地につけた場合は出発地を途中の目的地に設定する
-#     elif tmp[0] == tfd:
-#         tsd = tmp[0]
 #     else:
-tsd = sd
-tfd = fd
-for i in range(10):
-    tmp = turn_point(tsd,tfd,field)
-    routel.append(tsd)
-    if tmp[0] == fd or tmp[1] == fd:
-        routel.append(tfd)
-        print(routel)
-        break
-    else:
-        tsd = tmp[0]
-print(len(routel))
-desl = 0
-for i in range(len(routel) - 1):
-    desl += sqrt((routel[i+1][0] - routel[i][0])**2 + (routel[i+1][1] - routel[i][1])**2)
+#         tsd = tmp[0]
+# print(len(routel))
+# desl = 0
+# for i in range(len(routel) - 1):
+#     desl += sqrt((routel[i+1][0] - routel[i][0])**2 + (routel[i+1][1] - routel[i][1])**2)
 
-tsd = sd
-tfd = fd
+# tsd = sd
+# tfd = fd
 
-for i in range(10):
-    tmp = turn_point(tsd,tfd,field)
-    router.append(tsd)
-    if tmp[0] == fd or tmp[1] == fd:
-        router.append(tfd)
-        print(router)
-        break
-    else:
-        tsd = tmp[1]
-print(len(router))
-desr = 0
-for i in range(len(router) - 1):
-    desr += sqrt((router[i+1][0] - router[i][0])**2 + (router[i+1][1] - router[i][1])**2)
+# for i in range(10):
+#     tmp = turn_point(tsd,tfd,field)
+#     router.append(tsd)
+#     if tmp[0] == fd or tmp[1] == fd:
+#         router.append(tfd)
+#         print(router)
+#         break
+#     else:
+#         tsd = tmp[1]
+# print(len(router))
+# desr = 0
+# for i in range(len(router) - 1):
+#     desr += sqrt((router[i+1][0] - router[i][0])**2 + (router[i+1][1] - router[i][1])**2)
 
-print(desl)
-print(desr)
+# print(desl)
+# print(desr)
 
 
-# # # 目的地が出力されるまで求め続ける
+# # # # 目的地が出力されるまで求め続ける
 
-# sd = test[0]
-# a = (fd[1] - sd[1])/(fd[0] - sd[0])
-# b = sd[1] - a * sd[0]
+# # sd = test[0]
+# # a = (fd[1] - sd[1])/(fd[0] - sd[0])
+# # b = sd[1] - a * sd[0]
 
 
 
-# c = riku_range(a,b,field)
-# if c[0] == c[1]:
-#     print(fd)
+# # c = riku_range(a,b,field)
+# # if c[0] == c[1]:
+# #     print(fd)
 
 
-# sd = test[1]
-# a = (fd[1] - sd[1])/(fd[0] - sd[0])
-# b = sd[1] - a * sd[0]
+# # sd = test[1]
+# # a = (fd[1] - sd[1])/(fd[0] - sd[0])
+# # b = sd[1] - a * sd[0]
 
-# c = riku_range(a,b,field)
-# if c[0] == c[1]:
-#     print(fd)
+# # c = riku_range(a,b,field)
+# # if c[0] == c[1]:
+# #     print(fd)
