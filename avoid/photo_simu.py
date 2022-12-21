@@ -1,6 +1,10 @@
 import cv2
 from photo_route import *
 import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+## 写真にベクトルを描画する
 img = cv2.imread("avoid/fig/route2.png")
 img2 = img
 img_tmp = cv2.flip(img,0)
@@ -34,17 +38,57 @@ def cvArrow(img, pt1, pt2, color, thickness=10, lineType=8, shift=0):
     # 矢印の先端を描画する
     cv2.line(img,pt2,ptl,color,thickness,lineType,shift)
     cv2.line(img,pt2,ptr,color,thickness,lineType,shift)
-pt = [[196,594],[979,570],[1666,559],[1818,516],[1956,385]]
+pt = np.array[[196,594],[979,570],[1666,559],[1818,516],[1956,385]]
 for i in range(4):
     cvArrow(img, pt[i], pt[i+1], (0,255,0), thickness=1, lineType=8, shift=0)
 
 cvArrow(img, pt[0], pt[-1], (0,0,255), thickness=1, lineType=8, shift=0)
-cv2.imshow("Opencv",img)
-cv2.waitKey(0)
-cv2.imwrite("avoid/fig/afterplot.png", img)
+# cv2.imshow("Opencv",img)
+# cv2.waitKey(0)
+# cv2.imwrite("avoid/fig/afterplot.png", img)
 
-fd = [2269,455]
+## 時間ごとの進む方向と予想時間を出力する
+# 潮流のフィールドを定義
+sea_flow = []
+flow_tmp = []
+for i in range(img.shape[0]):
+    for j in range(img.shape[1]):
+        flow_tmp.append([-1.8,0.2])
+    sea_flow.append(flow_tmp)
+    flow_tmp = []
 
-# print(turn_point(sd,fd,img_bi))
 
+
+
+vs = 35
+# 距離と時間を求める
+pix_d = 18.950 / 1991
+des = []
+t = []
+vs = 37.5
+for i in range(len(pt) - 1):
+    # 座標から座標までの距離を求める
+    des_tmp = math.sqrt((pt[i+1][0] - pt[i][0])**2 + (pt[i+1][1] - pt[i][1])**2) * pix_d
+    des.append(des_tmp)
+
+    # 船が進む角度を求める
+    vec = pt[i+1] - pt[i]
+    ship_theta = np.arctan2(vec[0],vec[1])
+    ship_x = vs * math.cos(ship_theta) + sea_flow[pt[i][1]][pt[i][0]][0]
+    ship_y = vs * math.sin(ship_theta) + sea_flow[pt[i][1]][pt[i][0]][1]
+
+    revi_theta = np.arctan2(ship_x,ship_y)
+
+
+
+    t_tmp = des_tmp *60 / (vs)
+    t.append(t_tmp)
+print(des)
+print(t)
+print(str(sum(des)) + ' km')
+print(str(sum(t)) + ' 分')
+
+def theta_kakudo(theta):
+    pi = math.pi
+    return theta*360/(2*pi)
 
